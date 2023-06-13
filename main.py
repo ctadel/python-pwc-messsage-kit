@@ -24,6 +24,8 @@ class MainWindow(QMainWindow):
         # Menu Operations
         self.actionConsole.triggered.connect(self.toggle_console)
         self.actionConfiguration.triggered.connect(self.open_config_window)
+        self.actionAbout.triggered.connect(self.open_about_window)
+        self.menuAbout.addAction(self.actionAbout)
         self.actionExit.triggered.connect(exit)
 
         self.btn_browse.clicked.connect(self.browse_input_file)
@@ -77,6 +79,10 @@ class MainWindow(QMainWindow):
 
     def open_config_window(self):
         config_window = ConfigWindow(self)
+        config_window.exec_()
+
+    def open_about_window(self):
+        config_window = AboutWindow(self)
         config_window.exec_()
 
     def open_selected_file(self):
@@ -347,6 +353,16 @@ class ConfigWindow(QDialog):
         self.parent.console.append('Settings restored to default')
         C.write_config(C.default_config.copy(), persistent=True)
         self.close()
+
+
+class AboutWindow(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.parent = parent
+        uic.loadUi("about_window.ui", self)
+        self.show()
+
 
 def main():
     app = QApplication([])

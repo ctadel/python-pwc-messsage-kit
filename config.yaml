@@ -38,6 +38,9 @@ db:
     - ICEGATE -2
     - icegate pending scrolls
   - !!python/tuple
+    - Bank Register
+    - Bank Register
+  - !!python/tuple
     - Checklist BOE
     - checklist bill of entry
   - !!python/tuple

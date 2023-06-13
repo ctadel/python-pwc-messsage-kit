@@ -415,10 +415,16 @@
     <addaction name="actionShortcuts"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
+    <property name="acceptDrops">
+     <bool>true</bool>
+    </property>
     <property name="title">
      <string>About</string>
     </property>
-    <addaction name="actionHelp"/>
+    <property name="separatorsCollapsible">
+     <bool>false</bool>
+    </property>
+    <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -473,6 +479,11 @@
   <action name="actionDefault">
    <property name="text">
     <string>Default</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>Information</string>
    </property>
   </action>
  </widget>
