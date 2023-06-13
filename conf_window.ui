@@ -3,7 +3,7 @@
  <class>conf_window</class>
  <widget class="QDialog" name="conf_window">
   <property name="windowModality">
-   <enum>Qt::WindowModal</enum>
+   <enum>Qt::NonModal</enum>
   </property>
   <property name="geometry">
    <rect>
@@ -15,6 +15,12 @@
   </property>
   <property name="windowTitle">
    <string>Configurations</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
+  </property>
+  <property name="modal">
+   <bool>false</bool>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -546,8 +552,8 @@ Connection</string>
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>601</width>
-        <height>225</height>
+        <width>100</width>
+        <height>30</height>
        </rect>
       </property>
       <attribute name="label">
@@ -633,6 +639,14 @@ Connection</string>
       </widget>
      </widget>
      <widget class="QWidget" name="page_3">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>100</width>
+        <height>30</height>
+       </rect>
+      </property>
       <attribute name="label">
        <string>Data Types</string>
       </attribute>
@@ -716,6 +730,14 @@ Connection</string>
       </widget>
      </widget>
      <widget class="QWidget" name="page_4">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>100</width>
+        <height>30</height>
+       </rect>
+      </property>
       <attribute name="label">
        <string>File Sub Types</string>
       </attribute>
@@ -799,6 +821,14 @@ Connection</string>
       </widget>
      </widget>
      <widget class="QWidget" name="page_6">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>100</width>
+        <height>30</height>
+       </rect>
+      </property>
       <attribute name="label">
        <string>Default Values</string>
       </attribute>

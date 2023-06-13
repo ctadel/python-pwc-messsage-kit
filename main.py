@@ -46,6 +46,14 @@ class MainWindow(QMainWindow):
             self.setFixedWidth(310)
 
 
+    def delete_old_configuration(self):
+        self.x_filetype.clear()
+        self.x_company.clear()
+        self.x_datatype.clear()
+        self.x_filetype.clear()
+        self.x_rabbit_queue.clear()
+
+
     def apply_configuration(self):
         self.console.append("Applying configurations")
         self.actionConsole.setChecked(C.get_console())
@@ -82,8 +90,8 @@ class MainWindow(QMainWindow):
         config_window.exec_()
 
     def open_about_window(self):
-        config_window = AboutWindow(self)
-        config_window.exec_()
+        aboutwindow = AboutWindow(self)
+        aboutwindow.exec_()
 
     def open_selected_file(self):
         filename = self.x_inputfile.toPlainText()
@@ -337,7 +345,8 @@ class ConfigWindow(QDialog):
 
         if persistent:
             self.parent.console.append('Configurations saved..')
-            # self.parent.apply_configuration()
+            self.parent.delete_old_configuration()
+            self.parent.apply_configuration()
             self.close()
 
 

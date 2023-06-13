@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>about_window</class>
  <widget class="QDialog" name="about_window">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -194,12 +197,12 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>480</x>
+     <y>234</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
-     <y>274</y>
+     <y>257</y>
     </hint>
    </hints>
   </connection>
@@ -210,12 +213,12 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>480</x>
+     <y>240</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
-     <y>274</y>
+     <y>257</y>
     </hint>
    </hints>
   </connection>
