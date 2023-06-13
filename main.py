@@ -1,5 +1,6 @@
 import os
 import json
+import sys
 import subprocess
 
 from PyQt5.QtWidgets import *
@@ -7,15 +8,14 @@ from PyQt5.QtCore import Qt, QPropertyAnimation
 from PyQt5 import uic
 
 import utils
-from config import C
+from config import C, BASE_DIR
 
 class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
 
-
-        uic.loadUi("main_window.ui", self)
+        uic.loadUi(os.path.join(BASE_DIR, "main_window.ui"), self)
         self.apply_configuration()
         self.show()
 
@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
         self.actionConfiguration.triggered.connect(self.open_config_window)
         self.actionAbout.triggered.connect(self.open_about_window)
         self.menuAbout.addAction(self.actionAbout)
-        self.actionExit.triggered.connect(exit)
+        self.actionExit.triggered.connect(sys.exit)
 
         self.btn_browse.clicked.connect(self.browse_input_file)
         self.btn_execute.clicked.connect(self.open_selected_file)
@@ -176,7 +176,7 @@ class ConfigWindow(QDialog):
         super().__init__(parent)
 
         self.parent = parent
-        uic.loadUi("conf_window.ui", self)
+        uic.loadUi(os.path.join(BASE_DIR, "conf_window.ui"), self)
         self.show()
 
         self.btn_save.clicked.connect(lambda: self.save())
@@ -369,7 +369,7 @@ class AboutWindow(QDialog):
         super().__init__(parent)
 
         self.parent = parent
-        uic.loadUi("about_window.ui", self)
+        uic.loadUi(os.path.join(BASE_DIR, "about_window.ui"), self)
         self.show()
 
 
