@@ -3,6 +3,7 @@ import json
 import sys
 import subprocess
 
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QPropertyAnimation
 from PyQt5 import uic
@@ -15,7 +16,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        uic.loadUi(os.path.join(BASE_DIR, "main_window.ui"), self)
+        uic.loadUi(os.path.join(BASE_DIR, "resources", "main_window.ui"), self)
         self.apply_configuration()
         self.show()
 
@@ -176,7 +177,7 @@ class ConfigWindow(QDialog):
         super().__init__(parent)
 
         self.parent = parent
-        uic.loadUi(os.path.join(BASE_DIR, "conf_window.ui"), self)
+        uic.loadUi(os.path.join(BASE_DIR, "resources", "conf_window.ui"), self)
         self.show()
 
         self.btn_save.clicked.connect(lambda: self.save())
@@ -369,12 +370,13 @@ class AboutWindow(QDialog):
         super().__init__(parent)
 
         self.parent = parent
-        uic.loadUi(os.path.join(BASE_DIR, "about_window.ui"), self)
+        uic.loadUi(os.path.join(BASE_DIR, "resources", "about_window.ui"), self)
         self.show()
 
 
 def main():
     app = QApplication([])
+    app.setWindowIcon(QIcon(os.path.join(BASE_DIR, "resources", "icon.svg")))
     window = MainWindow()
     app.exec_()
 
