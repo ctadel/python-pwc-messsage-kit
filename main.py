@@ -3,6 +3,7 @@ import json
 import sys
 import subprocess
 
+import qdarktheme
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QPropertyAnimation
@@ -184,6 +185,9 @@ class ConfigWindow(QDialog):
         self.btn_ignore.clicked.connect(self.discard)
         self.btn_restore.clicked.connect(self.restore_defaults_clicked)
 
+        self.theme_auto.toggled.connect(self.update_theme)
+        self.theme_light.toggled.connect(self.update_theme)
+        self.theme_dark.toggled.connect(self.update_theme)
 
         self.rabbit_test.clicked.connect(self.test_rabbit_connection)
         self.aws_test.clicked.connect(self.test_aws_connection)
@@ -194,6 +198,7 @@ class ConfigWindow(QDialog):
         self.checkBox_console.setChecked(C.get_console())
         self.cb_rabbit_message_in_console.setChecked(C.get_general_config()['rabbit_message_in_console'])
         self.cb_allow_open_input_file.setChecked(C.get_general_config()['allow_open_input_file'])
+        self.get_config_theme().setChecked(True)
 
         for item in C.get_company_names():
             self.add_item(self.listWidget_company, item)
@@ -233,8 +238,6 @@ class ConfigWindow(QDialog):
 
         self.config_foldername.setPlainText(C.get_folder_name())
         self.config_dbname.setPlainText(C.get_db_name())
-
-
 
         self.setup_rabbit()
         self.setup_aws()
@@ -311,6 +314,22 @@ class ConfigWindow(QDialog):
         item.setData(Qt.UserRole, value)
         list_widget.addItem(item)
 
+    def get_selected_theme(self):
+        light = self.theme_light.isChecked()
+        dark = self.theme_dark.isChecked()
+        return 'light' if light else 'dark' if dark else 'auto'
+
+    def get_config_theme(self):
+        return dict(
+                auto = self.theme_auto,
+                light = self.theme_light,
+                dark = self.theme_dark
+            ).get(C.get_theme())
+
+    def update_theme(self):
+        qdarktheme.setup_theme(self.get_selected_theme())
+
+
     def save(self, persistent=True):
         data = C.default_config.copy()
 
@@ -318,7 +337,7 @@ class ConfigWindow(QDialog):
         configurations['console'] = self.checkBox_console.isChecked()
         configurations['rabbit_message_in_console'] = self.cb_rabbit_message_in_console.isChecked()
         configurations['allow_open_input_file'] = self.cb_allow_open_input_file.isChecked()
-
+        configurations['theme'] = self.get_selected_theme()
 
         data_variables = data['db']
         data_variables['file_type'] = utils.retrive_list_widget_items(self.listWidget_filetype)
@@ -377,6 +396,7 @@ class AboutWindow(QDialog):
 def main():
     app = QApplication([])
     app.setWindowIcon(QIcon(os.path.join(BASE_DIR, "resources", "icon.svg")))
+    qdarktheme.setup_theme(C.get_theme())
     window = MainWindow()
     app.exec_()
 

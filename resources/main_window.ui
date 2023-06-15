@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>650</width>
-    <height>523</height>
+    <height>545</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -197,6 +197,9 @@
       <property name="text">
        <string>Browse</string>
       </property>
+      <property name="shortcut">
+       <string>Space</string>
+      </property>
      </widget>
      <widget class="QPushButton" name="btn_execute">
       <property name="geometry">
@@ -349,6 +352,9 @@
     <property name="text">
      <string>Run</string>
     </property>
+    <property name="shortcut">
+     <string>Ctrl+Return</string>
+    </property>
     <property name="checkable">
      <bool>false</bool>
     </property>
@@ -380,6 +386,9 @@
     </property>
     <property name="text">
      <string>Clear</string>
+    </property>
+    <property name="shortcut">
+     <string>Ctrl+L</string>
     </property>
    </widget>
   </widget>
@@ -445,7 +454,10 @@
   </action>
   <action name="actionConfiguration">
    <property name="text">
-    <string>Configuration</string>
+    <string>Preferences</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
    </property>
   </action>
   <action name="actionShortcuts">
@@ -465,8 +477,14 @@
    <property name="text">
     <string>Console</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+`</string>
+   </property>
   </action>
   <action name="actionLight">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Light</string>
    </property>

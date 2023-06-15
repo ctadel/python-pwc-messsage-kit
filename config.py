@@ -14,7 +14,7 @@ class Conf:
                         'console': False,
                         'rabbit_message_in_console': False,
                         'allow_open_input_file': False,
-                        'theme': 'dark'
+                        'theme': 'auto'
                     },
                 'db': {
                         'company': [],
@@ -73,6 +73,17 @@ class Conf:
         except Exception as e:
             print(e)
             return False
+
+    def get_theme(self):
+        try:
+            theme = self.config['configurations']['theme']
+            if theme not in {'auto', 'light', 'dark'}:
+                print(f"Invalid theme type : {theme}")
+                raise ValueError
+            return theme
+
+        except Exception as e:
+            return "auto"
 
     def get_file_types(self):
         try:
