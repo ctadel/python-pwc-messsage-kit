@@ -6,7 +6,7 @@ import subprocess
 import qdarktheme
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import Qt, QPropertyAnimation
+from PyQt5.QtCore import Qt, QPropertyAnimation, QSettings, QPoint
 from PyQt5 import uic
 
 import utils
@@ -16,6 +16,11 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
+
+        # get and set last remebered app position
+        settings = QSettings("ctadel", "pwc-message-kit")
+        pos = settings.value("window_position", QPoint(200, 200))
+        self.move(pos)
 
         uic.loadUi(os.path.join(BASE_DIR, "resources", "main_window.ui"), self)
         self.apply_configuration()
@@ -172,6 +177,14 @@ class MainWindow(QMainWindow):
                 self.console.append(f'❌ Error while publishing to rabbitmq: {e}')
 
         self.progressBar.setValue(100)
+
+    def closeEvent(self, event):
+        # Save the window position in settings when the application is closed
+        settings = QSettings("ctadel", "pwc-message-kit")
+        settings.setValue("window_position", self.pos())
+
+        super().closeEvent(event)
+
 
 class ConfigWindow(QDialog):
     def __init__(self, parent=None):
