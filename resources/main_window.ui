@@ -207,14 +207,25 @@
         <x>240</x>
         <y>70</y>
         <width>20</width>
-        <height>25</height>
+        <height>20</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="statusTip">
-       <string>Open selected file</string>
+       <string>Open/Edit selected file</string>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border : None</string>
       </property>
       <property name="text">
-       <string>#!</string>
+       <string>📓</string>
       </property>
      </widget>
     </widget>
@@ -450,6 +461,9 @@
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string/>
    </property>
   </action>
   <action name="actionConfiguration">
