@@ -37,9 +37,9 @@ class MainWindow(QMainWindow):
         self.menuAbout.addAction(self.actionAbout)
         self.actionExit.triggered.connect(sys.exit)
 
-        self.actionAuto.triggered.connect(lambda: qdarktheme.setup_theme('auto'))
-        self.actionLight.triggered.connect(lambda: qdarktheme.setup_theme('light'))
-        self.actionDark.triggered.connect(lambda: qdarktheme.setup_theme('dark'))
+        self.actionAuto.triggered.connect(lambda:self.update_theme('auto'))
+        self.actionLight.triggered.connect(lambda:self.update_theme('light'))
+        self.actionDark.triggered.connect(lambda:self.update_theme('dark'))
 
         self.btn_browse.clicked.connect(self.browse_input_file)
         self.btn_execute.clicked.connect(self.open_selected_file)
@@ -58,6 +58,13 @@ class MainWindow(QMainWindow):
         else:
             self.setFixedWidth(310)
 
+    def update_theme(self, theme):
+        if theme not in {'auto', 'light', 'dark'}:
+            theme = 'auto'
+        qdarktheme.setup_theme(theme)
+        if theme == 'auto':
+            theme='system'
+        self.console.append(f"Switched to '{theme}' theme")
 
     def delete_old_configuration(self):
         self.x_filetype.clear()

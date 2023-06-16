@@ -51,7 +51,7 @@
     <bool>false</bool>
    </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>3</number>
    </property>
    <widget class="QWidget" name="tabAWS">
     <attribute name="title">
@@ -349,8 +349,8 @@ Connection</string>
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>98</width>
-        <height>28</height>
+        <width>581</width>
+        <height>120</height>
        </rect>
       </property>
       <attribute name="label">
@@ -461,8 +461,8 @@ Connection</string>
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>98</width>
-        <height>28</height>
+        <width>100</width>
+        <height>30</height>
        </rect>
       </property>
       <attribute name="label">
@@ -552,8 +552,8 @@ Connection</string>
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>98</width>
-        <height>28</height>
+        <width>100</width>
+        <height>30</height>
        </rect>
       </property>
       <attribute name="label">
@@ -643,8 +643,8 @@ Connection</string>
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>98</width>
-        <height>28</height>
+        <width>100</width>
+        <height>30</height>
        </rect>
       </property>
       <attribute name="label">
@@ -734,8 +734,8 @@ Connection</string>
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>98</width>
-        <height>28</height>
+        <width>100</width>
+        <height>30</height>
        </rect>
       </property>
       <attribute name="label">
@@ -997,18 +997,18 @@ Connection</string>
          <rect>
           <x>20</x>
           <y>30</y>
-          <width>61</width>
+          <width>71</width>
           <height>23</height>
          </rect>
         </property>
         <property name="text">
-         <string>Auto</string>
+         <string>System</string>
         </property>
        </widget>
        <widget class="QRadioButton" name="theme_light">
         <property name="geometry">
          <rect>
-          <x>100</x>
+          <x>110</x>
           <y>30</y>
           <width>61</width>
           <height>23</height>
