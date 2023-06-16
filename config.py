@@ -2,8 +2,8 @@ import os
 import yaml
 
 BASE_DIR = os.path.dirname(__file__)
-
-CONFIG_FILE = os.path.join(BASE_DIR, 'config.yaml')
+CONFIG_DIR = os.path.expanduser('~/.config/ctadel')
+CONFIG_FILE = os.path.join(CONFIG_DIR, 'config.yaml')
 
 class Conf:
 
@@ -60,6 +60,9 @@ class Conf:
 
     def write_config(self, config:dict, persistent=False):
 
+        if not os.path.exists(CONFIG_DIR):
+            os.mkdir(CONFIG_DIR)
+
         if persistent:
             with open(CONFIG_FILE, 'w') as file:
                 yaml.dump(config, file)
@@ -70,9 +73,7 @@ class Conf:
     def get_console(self):
         try:
             return self.config['configurations']['console']
-        except Exception as e:
-            print(e)
-            return False
+        except: return False
 
     def get_theme(self):
         try:
@@ -86,74 +87,71 @@ class Conf:
             return "auto"
 
     def get_file_types(self):
-        try:
+        if self.config.get('db') and self.config['db'].get('file_type'):
             return self.config['db']['file_type']
-        except Exception as e:
-            print(e)
-            return []
+        else: return []
 
     def get_company_names(self):
-        try:
+        if self.config.get('db') and self.config['db'].get('company'):
             return self.config['db']['company']
-        except Exception as e:
-            print(e)
-            return []
+        else: return []
 
     def get_datatypes(self):
-        try:
+        if self.config.get('db') and self.config['db'].get('data_type'):
             return self.config['db']['data_type']
-        except Exception as e:
-            print(e)
-            return []
+        else: return []
 
     def get_filesubtypes(self):
-        try:
+        if self.config.get('db') and self.config['db'].get('file_sub_type'):
             return self.config['db']['file_sub_type']
-        except Exception as e:
-            print(e)
-            return []
+        else: return []
 
     def get_rabbit_queues(self):
-        try:
+        if self.config.get('rabbit') and self.config['rabbit'].get('rabbit_queue_name'):
             return self.config['rabbit']['rabbit_queue_name']
-        except Exception as e:
-            print(e)
-            return []
+        else: return []
 
     def get_folder_name(self):
-        try:
+        if self.config.get('db') and self.config['db'].get('folder_name'):
             return self.config['db']['folder_name']
-        except Exception as e:
-            print(e)
-            return ''
+        else: return ''
 
     def get_db_name(self):
-        try:
+        if self.config.get('db') and self.config['db'].get('db_name'):
             return self.config['db']['db_name']
-        except Exception as e:
-            print(e)
-            return ''
+        else: return ''
+
 
     def get_rabbit_information(self):
+        general_config = self.config.get('rabbit')
 
-        try:
-            return self.config['rabbit']
-        except Exception as e:
-            print(e)
-            return {}
+        if not general_config:
+            return self.default_config['rabbit']
+        else:
+            self.default_config['rabbit'] \
+                .update(self.config.get('rabbit'))
+            return self.default_config['rabbit']
+
 
     def get_aws_information(self):
-        try:
-            return self.config['aws']
-        except Exception as e:
-            print(e)
-            return {}
+        general_config = self.config.get('aws')
+
+        if not general_config:
+            return self.default_config['aws']
+        else:
+            self.default_config['aws'] \
+                .update(self.config.get('aws'))
+            return self.default_config['aws']
+
 
     def get_general_config(self):
-        try:
-            return self.config['configurations']
-        except Exception as e:
-            print(e)
+        general_config = self.config.get('configurations')
+
+        if not general_config:
+            return self.default_config['configurations']
+        else:
+            self.default_config['configurations'] \
+                .update(self.config.get('configurations'))
             return self.default_config['configurations']
 
 C = Conf()

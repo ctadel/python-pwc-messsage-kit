@@ -77,7 +77,7 @@ def retrive_list_widget_items(listwidget):
 
 
 class RabbitMQ:
-    def __init__(self, config, db_name):
+    def __init__(self, config, db_name, queue_name):
         self.username = config['credentials']['username']
         self.password = config['credentials']['password']
 
@@ -87,7 +87,7 @@ class RabbitMQ:
                 virtual_host = config['server']['virtual_host']
             )
 
-        self.queue_name = config['rabbit_queue_name'][0][-1]
+        self.queue_name = queue_name
         self.mongo_db = db_name
         self.connection = None
 
@@ -117,8 +117,11 @@ class RabbitMQ:
             ))
 
     def __enter__(self):
-        self.connection = self.get_connection()
-        return self
+        try:
+            self.connection = self.get_connection()
+            return self
+        except:
+            raise ConnectionError("Error connecting to Rabbit server")
 
     def __exit__(self, *_):
         self.connection.close()
@@ -135,19 +138,27 @@ class AWS:
 
         self.folder_name = folder_name
 
+    def get_connection(self):
+        if not all([self.endpoint_url, self.access, self.secret, self.bucket_name]):
+            raise ValueError("Incomplete aws configuration")
 
-        self.client = boto3.client(
-                's3',
-                endpoint_url=self.endpoint_url,
-                aws_access_key_id=self.access,
-                aws_secret_access_key=self.secret
-            )
+        try:
+            self.client = boto3.client(
+                    's3',
+                    endpoint_url=self.endpoint_url,
+                    aws_access_key_id=self.access,
+                    aws_secret_access_key=self.secret
+                )
+        except:
+            raise ConnectionError("Invalid AWS configuration")
 
     def list_buckets(self):
+        self.get_connection()
         return self.client.list_buckets()
 
     def upload(self, local_file_path):
 
+        self.get_connection()
         s3_file_path = os.path.join(
                 self.folder_name,
                 os.path.basename(local_file_path)

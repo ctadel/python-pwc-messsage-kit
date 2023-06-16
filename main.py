@@ -2,6 +2,8 @@ import os
 import json
 import sys
 import subprocess
+from time import sleep
+from threading import Thread
 
 import qdarktheme
 from PyQt5.QtGui import QIcon
@@ -130,53 +132,68 @@ class MainWindow(QMainWindow):
         aws = utils.AWS(C.get_aws_information(), C.get_folder_name())
         try:
             aws.upload(self.x_inputfile.toPlainText())
-            self.console.append(f'✅ File {self.x_inputfile.toPlainText()} was uploaded to {C.get_aws_information().get("bucket_name")}')
-
-            progress_animation.setStartValue(0)
-            progress_animation.setEndValue(50)
-            progress_animation.start()  # Start the animation
+            self.console.append(
+                    f'✅ File {self.x_inputfile.toPlainText()} was uploaded to {C.get_aws_information().get("bucket_name")}'
+                )
 
         except Exception as e:
-            self.console.append(f"❌ Error in Upload: {e}")
 
             progress_animation.setStartValue(20)
             progress_animation.setEndValue(30)
             progress_animation.start()  # Start the animation
+
+            if isinstance(e, ValueError):
+                self.open_config_window()
+
+            self.console.append(f"❌ AWS Exception: {e}")
             return
 
+        progress_animation.setStartValue(0)
+        progress_animation.setEndValue(50)
+        progress_animation.start()  # Start the animation
 
-        with utils.RabbitMQ(C.get_rabbit_information(), C.get_db_name()) as rmq:
 
-            message = dict(
-                    file_name = os.path.basename(self.x_inputfile.toPlainText()),
-                    company_name = self.x_company.currentData(),
-                    file_type = self.x_filetype.currentData(),
-                    data_type = self.x_datatype.currentData(),
-                    load_id = self.x_loadid.value(),
-                    file_sub_type = self.x_filesubtype.currentData(),
-                    bucket_name = self.x_bucketname.toPlainText(),
-                    folder_name = self.x_foldername.toPlainText(),
-                    original_file_name = self.x_originalfilename.toPlainText(),
-                )
+        try:
+            with utils.RabbitMQ(
+                    C.get_rabbit_information(),
+                    C.get_db_name(),
+                    self.x_rabbit_queue.currentData()
+                ) as rmq:
 
-            try:
-                rmq.publish(message)
-                self.console.append(f'✅ Message published to rabbitmq\n')
+                message = dict(
+                        file_name = os.path.basename(self.x_inputfile.toPlainText()),
+                        company_name = self.x_company.currentData(),
+                        file_type = self.x_filetype.currentData(),
+                        data_type = self.x_datatype.currentData(),
+                        load_id = self.x_loadid.value(),
+                        file_sub_type = self.x_filesubtype.currentData(),
+                        bucket_name = self.x_bucketname.toPlainText(),
+                        folder_name = self.x_foldername.toPlainText(),
+                        original_file_name = self.x_originalfilename.toPlainText(),
+                    )
 
-                if self.general_config['rabbit_message_in_console']:
-                    self.console.append(json.dumps(message, indent=4))
+                try:
+                    rmq.publish(message)
+                    self.console.append(f'✅ Message published to rabbitmq\n')
 
-                progress_animation.setStartValue(50)
-                progress_animation.setEndValue(100)
-                progress_animation.start()  # Start the animation
+                    if self.general_config['rabbit_message_in_console']:
+                        self.console.append(json.dumps(message, indent=4))
 
-            except Exception as e:
-                progress_animation.setStartValue(50)
-                progress_animation.setEndValue(80)
-                progress_animation.start()  # Start the animation
-                self.console.append(f'❌ Error while publishing to rabbitmq: {e}')
+                    progress_animation.setStartValue(50)
+                    progress_animation.setEndValue(100)
+                    progress_animation.start()  # Start the animation
 
-        self.progressBar.setValue(100)
+                except Exception as e:
+                    progress_animation.setStartValue(50)
+                    progress_animation.setEndValue(80)
+                    progress_animation.start()  # Start the animation
+                    self.console.append(f'❌ Error while publishing to rabbitmq: {e}')
+
+            self.progressBar.setValue(100)
+        except Exception as e:
+            self.console.append(f"Exception: {e}")
+            self.progressBar.setValue(0)
+
 
     def closeEvent(self, event):
         # Save the window position in settings when the application is closed
@@ -264,12 +281,20 @@ class ConfigWindow(QDialog):
         self.aws_bucket.setPlainText(self.aws.bucket_name)
 
     def setup_rabbit(self):
-        self.rmq = utils.RabbitMQ(C.get_rabbit_information(), C.get_db_name())
+        self.rmq = utils.RabbitMQ(
+                C.get_rabbit_information(),
+                C.get_db_name(),
+                self.parent.x_rabbit_queue.currentData()
+            )
         self.rabbit_username.setPlainText(self.rmq.username)
         self.rabbit_password.setPlainText(self.rmq.password)
         self.rabbit_host.setPlainText(self.rmq.server_config['host'])
         self.rabbit_port.setPlainText(self.rmq.server_config['port'])
         self.rabbit_vhost.setPlainText(self.rmq.server_config['virtual_host'])
+
+    def revert_styled_button(self, button):
+        sleep(1.5)
+        button.setStyleSheet("background-color: grey; color: black; border: 1px solid grey;")
 
 
     def test_rabbit_connection(self):
@@ -296,6 +321,9 @@ class ConfigWindow(QDialog):
             self.rabbit_test.setGraphicsEffect(effect)
             self.parent.console.append("Error connecting to RabbitMQ")
 
+        finally:
+            Thread(target=self.revert_styled_button, args=(self.rabbit_test,)).start()
+
     def test_aws_connection(self):
         try:
             self.save(persistent=False)
@@ -310,6 +338,7 @@ class ConfigWindow(QDialog):
             self.aws_test.setGraphicsEffect(effect)
             self.parent.console.append("Connection to AWS S3/Minio was successfull")
         except Exception as e:
+            print(e)
             self.aws_test.setStyleSheet("background-color: red; border: 2px solid red;")
             self.aws_test.setAutoFillBackground(True)
             effect = QGraphicsDropShadowEffect(self.aws_test)
@@ -319,6 +348,8 @@ class ConfigWindow(QDialog):
             self.aws_test.setGraphicsEffect(effect)
             self.parent.console.append("Error connecting to AWS/Minio")
 
+        finally:
+            Thread(target=self.revert_styled_button, args=(self.aws_test,)).start()
 
 
     def add_item(self, list_widget, data):
