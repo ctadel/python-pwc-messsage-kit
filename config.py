@@ -9,7 +9,6 @@ class Conf:
 
     def __init__(self):
         self.default_config = {
-                'config_file': 'config.yaml',
                 'configurations': {
                         'console': False,
                         'rabbit_message_in_console': False,

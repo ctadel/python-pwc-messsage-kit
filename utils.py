@@ -33,8 +33,7 @@ def add_delete_move_functionality(list_widget, buttons):
 
             if display_name:
                 item = QListWidgetItem(display_name)
-                item.setData(Qt.UserRole, display_name)
-                item.setData(Qt.UserRole + 1, value)
+                item.setData(Qt.UserRole, value)
                 list_widget.addItem(item)
 
     def delete_item():
