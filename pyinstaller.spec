@@ -10,7 +10,6 @@ datas=[
    ('resources/conf_window.ui', 'resources/'),
    ('utils.py', '.'),
    ('config.py', '.'),
-   ('config.yaml', '.'),
 ]
 
 a = Analysis(

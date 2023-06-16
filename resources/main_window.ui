@@ -198,7 +198,7 @@
        <string>Browse</string>
       </property>
       <property name="shortcut">
-       <string>Space</string>
+       <string>Ctrl+Space</string>
       </property>
      </widget>
      <widget class="QPushButton" name="btn_execute">
@@ -417,7 +417,7 @@
      </property>
      <addaction name="actionLight"/>
      <addaction name="actionDark"/>
-     <addaction name="actionDefault"/>
+     <addaction name="actionAuto"/>
     </widget>
     <addaction name="menuTheme"/>
     <addaction name="actionConfiguration"/>
@@ -483,7 +483,7 @@
   </action>
   <action name="actionLight">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Light</string>
@@ -494,7 +494,7 @@
     <string>Dark</string>
    </property>
   </action>
-  <action name="actionDefault">
+  <action name="actionAuto">
    <property name="text">
     <string>Default</string>
    </property>

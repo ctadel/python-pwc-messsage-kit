@@ -37,6 +37,10 @@ class MainWindow(QMainWindow):
         self.menuAbout.addAction(self.actionAbout)
         self.actionExit.triggered.connect(sys.exit)
 
+        self.actionAuto.triggered.connect(lambda: qdarktheme.setup_theme('auto'))
+        self.actionLight.triggered.connect(lambda: qdarktheme.setup_theme('light'))
+        self.actionDark.triggered.connect(lambda: qdarktheme.setup_theme('dark'))
+
         self.btn_browse.clicked.connect(self.browse_input_file)
         self.btn_execute.clicked.connect(self.open_selected_file)
         self.btn_run.clicked.connect(self.run)
@@ -358,6 +362,11 @@ class ConfigWindow(QDialog):
         item.setData(Qt.UserRole, value)
         list_widget.addItem(item)
 
+
+    def update_theme(self):
+        qdarktheme.setup_theme(self.get_selected_theme())
+
+
     def get_selected_theme(self):
         light = self.theme_light.isChecked()
         dark = self.theme_dark.isChecked()
@@ -369,9 +378,6 @@ class ConfigWindow(QDialog):
                 light = self.theme_light,
                 dark = self.theme_dark
             ).get(C.get_theme())
-
-    def update_theme(self):
-        qdarktheme.setup_theme(self.get_selected_theme())
 
 
     def save(self, persistent=True):
