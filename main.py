@@ -19,9 +19,10 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        # get and set last remebered app position
-        settings = QSettings("ctadel", "pwc-message-kit")
-        pos = settings.value("window_position", QPoint(200, 200))
+        #user basics settings/confs
+        self.settings = QSettings("ctadel", "pwc-message-kit")
+
+        pos = self.settings.value("window_position", QPoint(200, 200))
         self.move(pos)
 
         uic.loadUi(os.path.join(BASE_DIR, "resources", "main_window.ui"), self)
@@ -124,7 +125,14 @@ class MainWindow(QMainWindow):
 
 
     def browse_input_file(self):
-        filename = QFileDialog.getOpenFileName(self, "Select File", os.path.expanduser('~/Downloads/'))[0]
+
+        last_browsed_dir = self.settings.value("last_browsed_dir", os.path.expanduser('~'))
+
+        filename = QFileDialog.getOpenFileName(self, "Select File", last_browsed_dir)[0]
+        if not filename:
+            return
+
+        self.settings.setValue("last_browsed_dir", os.path.dirname(filename))
         self.x_inputfile.setPlainText(filename)
 
         self.btn_execute.setEnabled(bool(filename))
@@ -208,8 +216,7 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         # Save the window position in settings when the application is closed
-        settings = QSettings("ctadel", "pwc-message-kit")
-        settings.setValue("window_position", self.pos())
+        self.settings.setValue("window_position", self.pos())
 
         super().closeEvent(event)
 
